@@ -1,7 +1,7 @@
-var Discord = require('discord.io');
+const { Client, Intents } = require('discord.js');
 var logger = require('winston');
 var auth = require('./auth.json');
-var commands = require('./commands.json');
+const roleClaim = require('./role-claim');
 
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
@@ -10,49 +10,41 @@ logger.add(new logger.transports.Console, {
 
 logger.level = 'debug';
 
-var bot = new Discord.Client({
-    token: auth.token,
-    autorun: true
+const bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
+
+bot.once('ready', () => {
+    logger.info('Bot is ready!');
+    roleClaim(bot);
+    
 });
 
-bot.on('ready', function (evt) {
-    logger.info('Connected');
-    logger.info('Logged in as: ');
-    logger.info(bot.username + ' - (' + bot.id + ')');
-});
+bot.login(auth.token);
 
-bot.on('message', function (user, userID, channelID, message, evt) {
-    if (message.substring(0, 1) == '!') {
-        var args = message.substring(1).split(' ');
+/*
+bot.on('messageCreate', (message) => {
+    let messageContent = message.content;
+    if (messageContent.substring(0, 1) == '!') {
+        var args = messageContent.substring(1).split(' ');
         var cmd = args[0];
        
         args = args.splice(1);
         switch(cmd) {
             case 'ping':
-                bot.sendMessage({
-                    to: channelID,
-                    message: 'Pong!'
-                });
-            break;
-            case 'help':
-                bot.sendMessage({
-                    to: channelID,
-                    message: '!ping - pong!'
-                });
+                message.channel.send('Pong!');
             break;
 
-            default:
-                bot.sendMessage({
-                    to: channelID,
-                    message: `Command not found!\n Here are the commands:\n ${JSON.stringify(commands)}\n`
-                });
+            case 'tests':
+                message.channel.send('Tests :white_check_mark:');
+            break;
         }
     }
 });
+*/
 
-bot.on('guildMemberAdd', function (member) {
-    bot.sendMessage({
-        to: '930707460795269151',
-        message: `Welcome to the server, ${member.username}!`
-    });
+bot.on('guildMemberAdd', (member) => {
+    logger.info(`${member.username} has joined the server`);
+
+    bot.channels.cache.find(channel => channel.id === "930707460795269151")
+        .send(`Welcome to the server, ${member.user}! Please review our rules <#930708332535238676> to get your role assigned!`);
+
 });

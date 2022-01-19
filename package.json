@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "description": "Discord bot for the Drip community",
     "main": "bot.js",
-    "author": "Drip",
+    "author": "Drip Protocol",
     "dependencies": {
-        "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+        "discord.js": "^13.6.0",
         "winston": "^3.4.0"
     }
 }
