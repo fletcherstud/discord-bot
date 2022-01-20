@@ -2,6 +2,7 @@ const { Client, Intents } = require('discord.js');
 var logger = require('winston');
 var auth = require('./auth.json');
 const roleClaim = require('./role-claim');
+const memberCount = require('./member-count');
 
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
@@ -15,7 +16,7 @@ const bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEM
 bot.once('ready', () => {
     logger.info('Bot is ready!');
     roleClaim(bot);
-    
+    memberCount(bot);
 });
 
 bot.login(auth.token);
