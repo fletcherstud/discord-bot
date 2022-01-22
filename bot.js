@@ -38,41 +38,11 @@ const stream = twitterClient.stream('statuses/filter', {
 });
 
 stream.on('tweet', tweet => {
-    const twitterMessage = `Drip just posted a new tweet: https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
+    const twitterMessage = `Drip just posted a new tweet! Check it out: https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
     logger.info('New tweet: ' + twitterMessage);
     bot.channels.cache.get(twitterChanel).send(twitterMessage);
     return false;
 });
-
-const logo = new MessageAttachment("./images/logo.png");
-const exampleEmbed = new MessageEmbed()
-	.setColor('#0C8FF0')
-	.setTitle('New Tweet Has Been Posted!')
-	.setURL('https://twitter.com/drip_protocol') //URL to tweet
-	.setAuthor({ name: 'Drip Protocol', iconURL: '', url: 'https://twitter.com/drip_protocol' })
-	.setDescription('Some description here')
-	.setImage('https://i.imgur.com/AfFp7pu.png')
-	.setTimestamp()
-
-bot.on('messageCreate', (message) => {
-    let messageContent = message.content;
-    if (messageContent.substring(0, 1) == '!') {
-        var args = messageContent.substring(1).split(' ');
-        var cmd = args[0];
-       
-        args = args.splice(1);
-        switch(cmd) {
-            case 'ping':
-                message.channel.send('Pong!');
-            break;
-
-            case 'tests':
-                message.channel.send({ embeds: [exampleEmbed] });
-            break;
-        }
-    }
-});
-
 
 bot.on('guildMemberAdd', (member) => {
     logger.info(`${member.username} has joined the server`);
