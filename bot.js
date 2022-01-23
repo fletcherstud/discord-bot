@@ -38,7 +38,8 @@ const stream = twitterClient.stream('statuses/filter', {
 });
 
 stream.on('tweet', tweet => {
-    const twitterMessage = `Drip just posted a new tweet! Check it out: https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
+    let everyone = bot.guilds.cache.get('930706320930254868').roles.cache.find(role => role.name === "@everyone");
+    const twitterMessage = `${everyone} Drip just posted a new tweet! Check it out: https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
     logger.info('New tweet: ' + twitterMessage);
     bot.channels.cache.get(twitterChanel).send(twitterMessage);
     return false;
