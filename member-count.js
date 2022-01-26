@@ -4,6 +4,6 @@ module.exports = async (client) => {
         const channelTicker = guild.channels.cache.get("933609699083960350");
         var memberCount = guild.memberCount;
 
-        channelTicker.setName(`Online Members: ${memberCount}`);
+        channelTicker.setName(`Members: ${memberCount}`);
     }, 60000);
 }

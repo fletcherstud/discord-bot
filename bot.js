@@ -1,10 +1,10 @@
-const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
-var Twit = require('twit');
+const { Client, Intents } = require('discord.js');
 var logger = require('winston');
 var auth = require('./auth.json');
 var twitAuth = require('./twitter.json');
 const roleClaim = require('./role-claim');
 const memberCount = require('./member-count');
+const coinPrices = require('./coin-prices');
 const Twitter = require('twit');
 
 logger.remove(logger.transports.Console);
@@ -28,6 +28,10 @@ bot.once('ready', () => {
     logger.info('Bot is ready!');
     roleClaim(bot);
     memberCount(bot);
+    setInterval(() => {
+        coinPrices(bot, 'solana');
+        coinPrices(bot, 'serum');
+    }, 60000);
 });
 
 bot.login(auth.token);
