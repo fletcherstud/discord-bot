@@ -14,10 +14,10 @@ logger.add(new logger.transports.Console, {
 logger.level = 'debug';
 
 const twitterConf = {
-    consumer_key: process.env.consumer,
-    consumer_secret: process.env.consumer_secret,
-    access_token: process.env.access,
-    access_token_secret: process.env.access_secret
+    consumer_key: process.env.TWITTER_CONSUMER,
+    consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+    access_token: process.env.TWITTER_ACCESS,
+    access_token_secret: process.env.TWITTER_ACCESS_SECRET
 }
 
 const twitterClient = new Twitter(twitterConf);
@@ -33,7 +33,7 @@ bot.once('ready', () => {
     }, 60000);
 });
 
-bot.login(process.env.token);
+bot.login(process.env.DISCORD_TOKEN);
 
 const twitterChanel = '931736578907336714';
 const stream = twitterClient.stream('statuses/filter', {
