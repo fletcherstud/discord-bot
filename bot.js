@@ -1,7 +1,6 @@
 const { Client, Intents } = require('discord.js');
 var logger = require('winston');
-var auth = require('./auth.json');
-var twitAuth = require('./twitter.json');
+require('dotenv').config();
 const roleClaim = require('./role-claim');
 const memberCount = require('./member-count');
 const coinPrices = require('./coin-prices');
@@ -15,10 +14,10 @@ logger.add(new logger.transports.Console, {
 logger.level = 'debug';
 
 const twitterConf = {
-    consumer_key: twitAuth.consumer,
-    consumer_secret: twitAuth.consumer_secret,
-    access_token: twitAuth.access,
-    access_token_secret: twitAuth.access_secret
+    consumer_key: process.env.consumer,
+    consumer_secret: process.env.consumer_secret,
+    access_token: process.env.access,
+    access_token_secret: process.env.access_secret
 }
 
 const twitterClient = new Twitter(twitterConf);
@@ -34,7 +33,7 @@ bot.once('ready', () => {
     }, 60000);
 });
 
-bot.login(auth.token);
+bot.login(process.env.token);
 
 const twitterChanel = '931736578907336714';
 const stream = twitterClient.stream('statuses/filter', {
