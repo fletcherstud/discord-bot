@@ -11,10 +11,11 @@ module.exports = async (client, coin) => {
         data = await response.json();
     }
     catch (error) {
-        console.log(`There was an error fetching ${coin} data: \n`, error);
+        logger.error(`There was an error fetching ${coin} data: \n`, error);
     }
     finally {
         logger.info(`${coin} price: ${data[coin].usd.toFixed(2)}`);
-        channel.setName(`${coin}: $${data[coin].usd.toFixed(2)}`);
+        channel.setName(`${coin}: $${data[coin].usd.toFixed(2)}`).then(newChannel => logger.info(`Channel's new name is ${newChannel.name}`))
+            .catch(error => logger.error(`There was an error changing the name of the channel: \n`, error));
     }
 }
