@@ -30,7 +30,7 @@ bot.once('ready', () => {
     setInterval(() => {
         coinPrices(bot, 'solana');
         coinPrices(bot, 'serum');
-    }, 60000);
+    }, 60000 * 5);
 });
 
 bot.login(process.env.DISCORD_TOKEN);
