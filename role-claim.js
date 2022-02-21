@@ -32,7 +32,7 @@ module.exports = client => {
 
     client.on('messageReactionAdd', (reaction, user) => {
         if (reaction.message.channel.id === channelId) {
-            if (reaction.emoji.name === `✅`) {
+            if (reaction.emoji === emoji) {
                 handleReaction(reaction, user, true);
             }
         }
@@ -40,7 +40,7 @@ module.exports = client => {
 
     client.on('messageReactionRemove', (reaction, user) => {
         if (reaction.message.channel.id === channelId) {
-            if (reaction.emoji.name === `✅`) {
+            if (reaction.emoji === emoji) {
                 handleReaction(reaction, user, false);
             }
         }
