@@ -40,6 +40,41 @@ const stream = twitterClient.stream('statuses/filter', {
     follow: '1479956858949431296'
 });
 
+const prefix = "!";
+const botCommandChannel = '931694376902602793'
+bot.on("messageCreate", function(message) {
+    if (message.author.bot || !message.content.startsWith(prefix) || message.channelId !== botCommandChannel) return; //If its bots message or message does not start with prefix just return
+
+    const commandBody = message.content.slice(prefix.length);
+    const args = commandBody.split(' ');
+    const command = args.shift().toLocaleLowerCase();
+    if (command === 'checkallusers') {
+        const guild = bot.guilds.cache.get('930706320930254868');
+        var checkDate = new Date(parseInt(args));
+        if(isNaN(checkDate)) {
+            message.reply("Please enter a valid date in milliseconds");
+            logger.info(`Invalid date was entered: ${args}`);
+            
+            return;
+        }
+        var reply = `Here are the users who have created an account after ${checkDate.toString()}:\n`;
+
+        guild.members.fetch()
+            .then(members => {
+                logger.info(`Checking against ${members.size} members`);
+                members.forEach(member => {
+                    if ( member.user.createdAt.getTime() > checkDate.getTime()) {
+                        if (reply.length > 1000) {
+                            message.reply(reply);
+                            reply = '';
+                        }
+                        reply += `<@${member.user.id}>\n`;
+                    }
+                });
+            }).finally(() => {message.reply(reply);});
+    }
+})
+
 stream.on('tweet', tweet => {
     let everyone = bot.guilds.cache.get('930706320930254868').roles.cache.find(role => role.name === "@everyone");
     const twitterMessage = `${everyone} Drip just posted a new tweet! Check it out: https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
