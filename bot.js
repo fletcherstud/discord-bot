@@ -76,6 +76,12 @@ bot.on("messageCreate", function(message) {
 })
 
 stream.on('tweet', tweet => {
+    console.log(tweet);
+    if (tweet.in_reply_to_status_id != null || tweet.in_reply_to_status_id_str != null || tweet.in_reply_to_user_id != null|| tweet.in_reply_to_user_id_str != null || tweet.in_reply_to_screen_name != null){
+        logger.info("Incoming tweet is a reply... ignoring");
+        return false;
+    } 
+
     let everyone = bot.guilds.cache.get('930706320930254868').roles.cache.find(role => role.name === "@everyone");
     const twitterMessage = `${everyone} Drip just posted a new tweet! Check it out: https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
     logger.info('New tweet: ' + twitterMessage);
