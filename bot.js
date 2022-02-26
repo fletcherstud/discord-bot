@@ -76,7 +76,6 @@ bot.on("messageCreate", function(message) {
 })
 
 stream.on('tweet', tweet => {
-    console.log(tweet);
     if (tweet.in_reply_to_status_id != null || tweet.in_reply_to_status_id_str != null || tweet.in_reply_to_user_id != null|| tweet.in_reply_to_user_id_str != null || tweet.in_reply_to_screen_name != null){
         logger.info("Incoming tweet is a reply... ignoring");
         return false;
