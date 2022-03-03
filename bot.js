@@ -21,7 +21,7 @@ const twitterConf = {
 }
 
 const twitterClient = new Twitter(twitterConf);
-const bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
+const bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS], fetchAllMembers: true });
 
 bot.once('ready', () => {
     logger.info('Bot is ready!');
@@ -48,8 +48,9 @@ bot.on("messageCreate", function(message) {
     const commandBody = message.content.slice(prefix.length);
     const args = commandBody.split(' ');
     const command = args.shift().toLocaleLowerCase();
+    const guild = bot.guilds.cache.get('930706320930254868');
+
     if (command === 'checkallusers') {
-        const guild = bot.guilds.cache.get('930706320930254868');
         var checkDate = new Date(parseInt(args));
         if(isNaN(checkDate)) {
             message.reply("Please enter a valid date in milliseconds");
@@ -72,6 +73,46 @@ bot.on("messageCreate", function(message) {
                     }
                 });
             }).finally(() => {message.reply(reply);});
+    }
+
+    if (command === 'removenorole') {
+        const ogId = '940073623627137035';
+        const teamId = '930712007160786957';
+        const dripBotId = '931685062813057085';
+        const grapeId = `946136768644796460`;
+        const boosterId = '945065449660493875';
+
+        var noRoleList = [];
+
+        if(args != 'amount') {
+            message.reply('Removing users from the no role list...');
+        }
+
+        guild.members.fetch()
+            .then(members => {
+                members.forEach(member => {
+                    var correctRole = false;
+                    member.roles.cache.forEach(role => {
+                        if (role.id === ogId || role.id === teamId || role.id === dripBotId || role.id === grapeId || role.id === boosterId) {
+                            correctRole = true;
+                        }
+                    })
+                    if (!correctRole) {
+                        noRoleList.push(member);
+                    }
+                });
+            }).finally(async () => {
+                if(args == 'amount') {
+                    message.reply(`Users with no role: ${noRoleList.length}`);
+                } else {
+                    numberKicked = 0;
+                    for (const member of noRoleList) {
+                        await member.kick()
+                        numberKicked++;
+                    }
+                    message.reply(`Amount Kicked: ${numberKicked}`)
+                }
+            })
     }
 })
 
