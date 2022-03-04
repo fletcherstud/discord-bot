@@ -131,9 +131,32 @@ stream.on('tweet', tweet => {
 });
 
 bot.on('guildMemberAdd', (member) => {
-    logger.info(`${member.username} has joined the server`);
+    logger.info(`${member.user.username} has joined the server`);
+    const launchDate = new Date(1647568840000); // Date to get OG role
+    var today = new Date();
 
     bot.channels.cache.find(channel => channel.id === "930707460795269151")
         .send(`Welcome to the server, ${member.user}! Please review our rules <#930708332535238676> to get your role assigned!`);
 
+    const ogRoleId = '940073623627137035';
+    const dropletId = '930719687539560518';
+    setTimeout(() => {
+        var correctRole = false;
+        member.roles.cache.forEach(role => {
+            if(today.getTime() < launchDate.getTime()) {
+                if(role.id === ogRoleId) {
+                    correctRole = true;
+                }
+            } else {
+                if(role.id === dropletId) {
+                    correctRole = true;
+                }
+            }
+        })
+
+        if(!correctRole) {
+            logger.info(`${member.user.username} did not accept the rules in the alloted time, kicking...`); 
+            member.kick();
+        }
+    } , 2000 * 60);
 });
