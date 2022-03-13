@@ -40,6 +40,27 @@ const stream = twitterClient.stream('statuses/filter', {
     follow: '1479956858949431296'
 });
 
+async function lots_of_users_getter(message, limit = 1000) {
+    const sum_users = [];
+    let last_id = null;
+
+    while(true) {
+        const options = { limit: 100 };
+        if (last_id) {
+            options.after = last_id;
+        }
+
+        const users = await message.reactions.cache.get('945393635913007155').users.fetch(options);
+        sum_users.push(...users);
+        last_id = users.last().id;
+
+        if (users.size != 100 || sum_users.length >= limit) {
+            break;
+        }
+    }
+    return sum_users;
+}
+
 const prefix = "!";
 const botCommandChannel = '931694376902602793'
 bot.on("messageCreate", function(message) {
@@ -49,6 +70,39 @@ bot.on("messageCreate", function(message) {
     const args = commandBody.split(' ');
     const command = args.shift().toLocaleLowerCase();
     const guild = bot.guilds.cache.get('930706320930254868');
+
+    if (command === 'getusersreaction') {
+        const channel = message.guild.channels.cache.get('931735527571480666') //MUST CHANGE TO THE CHANNEL ID
+        let list = []
+
+        console.log('Checking users')
+        channel.messages.fetch(args[0]).then(async emojiMessage => {
+                const reactedMembers = await lots_of_users_getter(emojiMessage)
+                reactedMembers.forEach(member => {list.push(member)})
+                console.log(list)
+                console.log(list.length)
+                const memberIds = new Set(list.map(([id]) => id));
+                guild.members.fetch().then(allMembers => {
+                    let amountNotReacted = 0
+                    let amountReacted = 0
+                    for (const member of allMembers) {
+                        if(memberIds.has(member[1].user.id)) {
+                            amountReacted++
+                        } else {
+                            if(member[1].user.id === '849358659897262080' || member[1].user.id === '223986960967008256' || member[1].user.id === '224408126546247680' || member[1].user.id === '931682973349191770' || member[1].user.id === '242856962780299266' || member[1].user.id === '298994245497520130') {
+                                console.log("Found User: " + member[1].user.username)
+                            } else {
+                                //TODO: Kick user
+                                //await member.kick();
+                                amountNotReacted++
+                            }
+                        }
+                    }
+                    message.reply(`Amount of members who reacted: ${amountReacted}\nAmount of members who were kicked: ${amountNotReacted}`)
+                })
+        });
+    }
+    
 
     if (command === 'checkallusers') {
         var checkDate = new Date(parseInt(args));
@@ -132,7 +186,7 @@ stream.on('tweet', tweet => {
 
 bot.on('guildMemberAdd', (member) => {
     logger.info(`${member.user.username} has joined the server`);
-    const launchDate = new Date(1647568840000); // Date to get OG role
+    const launchDate = new Date(1647295200000); // Date to get OG role
     var today = new Date();
 
     bot.channels.cache.find(channel => channel.id === "930707460795269151")
