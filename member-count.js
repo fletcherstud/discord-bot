@@ -7,5 +7,5 @@ module.exports = async (client) => {
     var memberCount = guild.memberCount;
 
     channelTicker.setName(`Members: ${memberCount}`);
-  }, 60000);
+  }, 60000 * 30);
 };
