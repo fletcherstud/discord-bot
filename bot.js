@@ -42,6 +42,10 @@ bot.on("messageCreate", function (message) {
   const args = commandBody.split(" ");
   const command = args.shift().toLocaleLowerCase();
   const guild = bot.guilds.cache.get(process.env.GUILD);
+
+  if (command === "status") {
+    message.reply("Alive");
+  }
 });
 
 bot.on("guildMemberAdd", (member) => {
