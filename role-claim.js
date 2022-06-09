@@ -5,7 +5,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = (client) => {
   const channelId = `984539239041605746`;
   let emojiText =
-    "1. Be Chill\n2. Do Not Not Be Chill\n\nAccept our rules by reacting to our custom emoji below!\n\n";
+    "1. Be Chill\n2. Do Not Not Be Chill\n\nAccept our rules by reacting to our custom emoji <:react:984551350148947989> below!\n\n";
   const emoji = client.emojis.cache.get("984551350148947989");
   const reactions = [emoji.toString()];
 
